@@ -1,0 +1,155 @@
+///This file is conversion of selenium java code of creating lead in leaftaps into playwright with javascript
+
+const { test, expect } = require('@playwright/test');
+
+/**
+ * Page Object Model for Create Lead page and related flows
+ */
+class CreateLeadPage {
+  /**
+   * @param {import('@playwright/test').Page} page
+   */
+  constructor(page) {
+    this.page = page;
+  }
+
+  /**
+   * Navigate to the base URL
+   */
+  async navigate() {
+    await this.page.goto('http://leaftaps.com/opentaps');
+  }
+
+  /**
+   * Maximize browser window by setting viewport size
+   */
+  async maximizeWindow() {
+    await this.page.setViewportSize({ width: 1920, height: 1080 });
+  }
+
+  /**
+   * Enter username in login form
+   * @param {string} username
+   */
+  async enterUsername(username) {
+    await this.page.fill('#username', username);
+  }
+
+  /**
+   * Enter password in login form
+   * @param {string} password
+   */
+  async enterPassword(password) {
+    await this.page.fill('#password', password);
+  }
+
+  /**
+   * Click the login button
+   */
+  async clickLogin() {
+    await this.page.click('.decorativeSubmit');
+  }
+
+  /**
+   * Click the CRM/SFA link after login
+   */
+  async clickCRMSFA() {
+    await this.page.click('text=CRM/SFA');
+  }
+
+  /**
+   * Click the Create Lead link
+   */
+  async clickCreateLead() {
+    await this.page.click('text=Create Lead');
+  }
+
+  /**
+   * Enter company name in Create Lead form
+   * @param {string} companyName
+   */
+  async enterCompanyName(companyName) {
+    await this.page.fill('#createLeadForm_companyName', companyName);
+  }
+
+  /**
+   * Enter first name in Create Lead form
+   * @param {string} firstName
+   */
+  async enterFirstName(firstName) {
+    await this.page.fill('#createLeadForm_firstName', firstName);
+  }
+
+  /**
+   * Enter last name in Create Lead form
+   * @param {string} lastName
+   */
+  async enterLastName(lastName) {
+    await this.page.fill('#createLeadForm_lastName', lastName);
+  }
+
+  /**
+   * Select Source dropdown by visible text
+   * @param {string} visibleText
+   */
+  async selectSource(visibleText) {
+    await this.page.selectOption('#createLeadForm_dataSourceId', { label: visibleText });
+  }
+
+  /**
+   * Select Marketing Campaign dropdown by value
+   * @param {string} value
+   */
+  async selectMarketingCampaign(value) {
+    await this.page.selectOption('#createLeadForm_marketingCampaignId', value);
+  }
+
+  /**
+   * Click the Create Lead submit button
+   */
+  async clickCreateLeadButton() {
+    await this.page.click('[name="submitButton"]');
+  }
+
+  /**
+   * Get the current page title
+   * @returns {Promise<string>}
+   */
+  async getTitle() {
+    return await this.page.title();
+  }
+}
+
+test.describe('Create Lead Test Suite', () => {
+  let createLeadPage;
+
+  test.beforeEach(async ({ page }) => {
+    createLeadPage = new CreateLeadPage(page);
+    await createLeadPage.navigate();
+    await createLeadPage.maximizeWindow();
+  });
+
+  /**
+   * Test to create lead and verify page titles during the flow
+   */
+  test('Create Lead end to end flow with title verification', async ({ page }) => {
+    await createLeadPage.enterUsername('DemoSalesManager');
+    await createLeadPage.enterPassword('crmsfa');
+    await createLeadPage.clickLogin();
+
+    await expect(page).toHaveTitle('Leaftaps - TestLeaf Automation Platform');
+
+    await createLeadPage.clickCRMSFA();
+    await createLeadPage.clickCreateLead();
+
+    await createLeadPage.enterCompanyName('TestLeaf');
+    await createLeadPage.enterFirstName('Babu');
+    await createLeadPage.enterLastName('Manickam');
+    await createLeadPage.selectSource('Employee');
+    await createLeadPage.selectMarketingCampaign('9001');
+
+    await createLeadPage.clickCreateLeadButton();
+
+    await expect(page).toHaveTitle(/^(View Lead \| opentaps CRM|Leaftaps - TestLeaf Automation Platform)$/);
+  });
+});

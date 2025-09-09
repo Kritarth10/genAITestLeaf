@@ -1,0 +1,160 @@
+
+ Context:
+    You are an AI assistant to convert Selenium Java to Playwright javascript code.
+   
+    Given the following Selenium Code:
+    package week2.day1;
+
+
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class Login {
+	
+	public static void main(String[] args) {
+		/*
+		 * Selenium Internal Architecture:
+		 * 
+		 * Selenium (Java) -> REST API -> ChromeDriver (binary) -> Chrome
+		 * ChromeDriver -> Local Server which is built on Js, Python -> Google
+		 * GeckoDriver -> Local Server Js, C++ -> Mozilla
+		 * Selenium (Java) -> REST API -> GeckoDriver (binary) -> Firefox
+		 * 
+		 * Selenium (C#) -> REST API -> ChromeDriver (binary) -> Chrome\
+		 * 
+		 * Selenium Java + REST API is bundled inside the Jar File
+		 * ChromeDriver -> Automate the download -> webdrivermanager 
+		 * Chrome 89 -> Chrome 89 driver
+		 * Chrome 89 + Mac -> Different DRIVER
+		 * 
+		 */
+		
+		/*
+		 * Preconditions:
+		 * 1) Selenium Java Software (
+		 * 2) Browser Driver
+		 * 
+		 * 
+		 * 
+		 * Create a new package 
+		 * Create a new class -> Login
+		 * 
+		 */
+		
+		// Step 0) Setup the chromedriver using webdrivermanager software
+		WebDriverManager.chromedriver().setup(); // .exe or binary
+		
+		// Step 1) Launch the chrome browser (Class Name -> ChromeDriver)
+		ChromeDriver driver = new ChromeDriver();
+		
+		// Step 2) Load the URL (http://leaftaps.com/opentaps/control/main) -> get
+		driver.get("http://leaftaps.com/opentaps");
+		
+		// Step 2b) Add common time to wait for all/any elements to load (Write once)
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+		
+		// Step 3) Maximize the chrome browser
+		driver.manage().window().maximize();
+		
+		// Step 4) Find the username and type the value (DemoSalesManager)
+		driver.findElement(By.id("username1")).sendKeys("DemoSalesManager");
+		
+		// Step 5) Find the password and type the value (crmsfa)
+		driver.findElement(By.id("password")).sendKeys("crmsfa");	
+		
+		// Step 6) Find the login button and click
+		driver.findElement(By.className("decorativeSubmit")).click();
+		
+		// Step 7) Verify the title 
+		String title = driver.getTitle();
+		System.out.println(title);
+
+	}
+
+}
+    We want ONLY a Playwright Javacript SPEC file for that Selenium Code.
+
+Instructions:
+
+     - Implementation guidelines:
+       - Use latest stable version of Javascript
+       - Use lates version of Playwright
+       -[MANDATORY] Every method should have proper comments above method signature
+       - Do not send any explanation or additional text
+       - Use select for dropdowns
+       - [CRITICAL] use right locators starting id, name, class, link text and finally xpath
+       - Do not use id as locator if it contains numbers
+       - Use Aync/await
+       - [IMPORTANT]DO NOT USE Promises anywhere in the typescript. 
+       - Follow POM and include spec and every other thing in one file
+       - Use assertion to verify the test case
+       -Use assertion on the title of the page which can be this "Leaftaps - TestLeaf Automation Platform" or "View Lead | opentaps CRM"
+
+
+Examples:
+
+     - Example 1:
+      
+      Input Java Code:
+     import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class SeleniumExample {
+    public static void main(String[] args) {
+        // Set the path to the ChromeDriver executable
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+
+        WebDriver driver = new ChromeDriver();
+        try {
+            driver.get("https://www.example.com");
+            WebElement heading = driver.findElement(By.cssSelector("#main-heading"));
+            System.out.println("Heading text (Selenium): " + heading.getText());
+        } finally {
+            driver.quit();
+        }
+    }
+}
+      Playwright Javascript Spec file:
+      ```javascript
+       const { chromium } = require('playwright'); // Or firefox, webkit
+
+async function runPlaywright() {
+    const browser = await chromium.launch(); // Or firefox.launch(), webkit.launch()
+    const page = await browser.newPage();
+    await page.goto('https://www.example.com');
+    const headingText = await page.locator('#main-heading').textContent();
+    console.log('Heading text (Playwright):', headingText);
+    await browser.close();
+}
+
+runPlaywright();
+        ```          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
